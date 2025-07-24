@@ -52,7 +52,7 @@ const getLibrary = (packageName: string) => {
     case 'File storage':
       return 'EduRPA.Storage';
     case 'SAP MOCK':
-      return 'RPA.MOCK_SAP';
+      return 'rpa_sap.SAPKeywords';
     case 'Data manipulation':
         return 'Collections';
     default:
