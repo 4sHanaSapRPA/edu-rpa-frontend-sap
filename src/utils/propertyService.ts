@@ -51,6 +51,8 @@ const getLibrary = (packageName: string) => {
       return 'EduRPA.Document';
     case 'File storage':
       return 'EduRPA.Storage';
+    case 'SAP MOCK':
+      return 'RPA.MOCK_SAP';
     case 'Data manipulation':
         return 'Collections';
     default:
@@ -81,7 +83,7 @@ const getPackageIcon = (displayName: string) => {
     case 'File storage':
       return FileStorageIcon;
     case 'SAP MOCK':
-      return SapMockIcon
+      return SapMockIcon;
     default:
       return null;
   }
