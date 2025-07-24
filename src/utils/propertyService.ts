@@ -13,7 +13,7 @@ import BrowserEventIcon from '@/assets/images/services/icons8-search-in-browser-
 import TextExtractionIcon from '@/assets/images/services/icons8-image-100.png';
 import VariableIcon from '@/assets/images/services/icons8-variable-96.png';
 import FileStorageIcon from '@/assets/images/services/icons8-file-storage-96.png';
-
+import SapMockIcon from '@/assets/images/services/sap.png';
 const getDistinctService = (data: any) => {
   const services = data
     .map((template: any) => template.service)
@@ -80,6 +80,8 @@ const getPackageIcon = (displayName: string) => {
       return VariableIcon;
     case 'File storage':
       return FileStorageIcon;
+    case 'SAP MOCK':
+      return SapMockIcon
     default:
       return null;
   }

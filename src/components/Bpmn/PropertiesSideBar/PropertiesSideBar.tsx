@@ -275,6 +275,7 @@ export default function PropertiesSideBar({
                   'connection.Google Drive': '',
                   'connection.Gmail': '',
                   'connection.Google Sheets': '',
+                  'connection.SAP Mock': '',
                   'enum.shareType': 'user',
                   'enum.permission': 'reader',
                   label_ids: 'inbox',
@@ -417,6 +418,11 @@ export default function PropertiesSideBar({
                     return renderConnectionSelect(
                       paramKey,
                       AuthorizationProvider.G_FORMS
+                    );
+                  case 'connection.SAP Mock':
+                    return renderConnectionSelect(
+                      paramKey,
+                      AuthorizationProvider.SAP_MOCK
                     );
                   case 'enum.shareType':
                     return renderSelect(paramKey, [

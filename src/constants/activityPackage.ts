@@ -1492,4 +1492,153 @@ export const ActivityPackages = [
       },
     ],
   },
+  {
+    _id: 'rpa-sap-mock',
+    displayName: 'SAP MOCK',
+    description: "Help you to handle sap activities",
+    library: 'RPA.MOCK_SAP',
+    activityTemplates: [
+      {
+        templateId: 'connect_to_sap_system',
+        displayName: 'Connect to SAP System',
+        description: 'Connect to the SAP system using a base URL and token file',
+        iconCode: 'FaLink',
+        type: 'activity',
+        keyword: 'Connect To SAP System',
+        arguments: {
+          'Base URL': {
+            type: 'string',
+            description: 'The base URL of the SAP system',
+            keywordArg: 'base_url',
+            value: ''
+          },
+          'Token File Path': {
+            type: 'connection.SAP Mock',
+            description: 'The path to the file containing the SAP access token',
+            keywordArg: 'token_file_path',
+            value: ''
+          },
+          'Verify SSL': {
+            type: 'boolean',
+            description: 'Whether to verify SSL certificates',
+            keywordArg: 'verify_ssl',
+            value: false
+          }
+        },
+        return: {
+          displayName: 'Connection Status',
+          type: 'void',
+          description: 'Indicates successful connection to the SAP system'
+        }
+      },
+      {
+        templateId: 'get_business_partner',
+        displayName: 'Get Business Partner',
+        description: 'Retrieve a business partner by ID from the SAP system',
+        iconCode: 'FaUser',
+        type: 'activity',
+        keyword: 'Get Business Partner By ID',
+        arguments: {
+          'Partner ID': {
+            type: 'string',
+            description: 'The ID of the business partner to retrieve',
+            keywordArg: 'partner_id',
+            value: ''
+          }
+        },
+        return: {
+          displayName: 'Business Partner Data',
+          type: 'object',
+          description: 'The business partner data retrieved from the SAP system'
+        }
+      },
+      {
+        templateId: 'create_business_partner_address',
+        displayName: 'Create Business Partner Address',
+        description: 'Create a new address for a business partner in the SAP system',
+        iconCode: 'FaAddressCard',
+        type: 'activity',
+        keyword: 'Create Business Partner Address',
+        arguments: {
+          'Partner ID': {
+            type: 'string',
+            description: 'The ID of the business partner',
+            keywordArg: 'partner_id',
+            value: ''
+          },
+          'JSON Data': {
+            type: 'string',
+            description: 'The address data in JSON format',
+            keywordArg: 'json_data',
+            value: ''
+          }
+        },
+        return: {
+          displayName: 'Created Address Data',
+          type: 'object',
+          description: 'The created address data returned from the SAP system'
+        }
+      },
+      {
+        templateId: 'update_business_partner_address',
+        displayName: 'Update Business Partner Address',
+        description: 'Update an existing address for a business partner in the SAP system',
+        iconCode: 'FaEdit',
+        type: 'activity',
+        keyword: 'Update Business Partner Address',
+        arguments: {
+          'Partner ID': {
+            type: 'string',
+            description: 'The ID of the business partner',
+            keywordArg: 'partner_id',
+            value: ''
+          },
+          'Address ID': {
+            type: 'string',
+            description: 'The ID of the address to update',
+            keywordArg: 'address_id',
+            value: ''
+          },
+          'JSON Data': {
+            type: 'string',
+            description: 'The updated address data in JSON format',
+            keywordArg: 'json_data',
+            value: ''
+          }
+        },
+        return: {
+          displayName: 'Updated Address Data',
+          type: 'object',
+          description: 'The updated address data returned from the SAP system'
+        }
+      },
+      {
+        templateId: 'delete_business_partner_address',
+        displayName: 'Delete Business Partner Address',
+        description: 'Delete an address for a business partner in the SAP system',
+        iconCode: 'FaTrash',
+        type: 'activity',
+        keyword: 'Delete Business Partner Address',
+        arguments: {
+          'Partner ID': {
+            type: 'string',
+            description: 'The ID of the business partner',
+            keywordArg: 'partner_id',
+            value: ''
+          },
+          'Address ID': {
+            type: 'string',
+            description: 'The ID of the address to delete',
+            keywordArg: 'address_id',
+            value: ''
+          }
+        },
+        return: {
+          displayName: 'Deletion Status',
+          type: 'string',
+          description: 'The response text indicating the deletion status'
+        }
+      }
+    ]
+  }
 ];
