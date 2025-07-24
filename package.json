@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "postinstall": "patch-package",
-    "dev": "ENV=development next dev",
+    "dev": "cross-env ENV=development next dev -p 4000",
     "build": "next build",
     "export": "next export",
     "start": "next start",

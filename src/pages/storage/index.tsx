@@ -1,6 +1,6 @@
-import { formatDate } from '@/utils/common';
-import React, { useEffect, useState } from 'react';
-import SidebarContent from '@/components/Sidebar/SidebarContent/SidebarContent';
+import { formatDate } from "@/utils/common";
+import React, { useEffect, useState } from "react";
+import SidebarContent from "@/components/Sidebar/SidebarContent/SidebarContent";
 import {
   Box,
   Button,
@@ -11,28 +11,28 @@ import {
   Select,
   Tooltip,
   useDisclosure,
-} from '@chakra-ui/react';
-import { ChevronRightIcon, QuestionIcon, SearchIcon } from '@chakra-ui/icons';
-import { RangeDatepicker } from 'chakra-dayzed-datepicker';
-import FileItem from '@/components/FileStorage/FileItem';
+} from "@chakra-ui/react";
+import { ChevronRightIcon, QuestionIcon, SearchIcon } from "@chakra-ui/icons";
+import { RangeDatepicker } from "chakra-dayzed-datepicker";
+import FileItem from "@/components/FileStorage/FileItem";
 import {
   getFiles,
   createFolder,
   getPresignedUrl,
   deleteFile,
-} from '@/apis/fileStorageApi';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
-import CreateFolderModal from '@/components/FileStorage/CreateFolderModal';
-import FileUploadModal from '@/components/FileStorage/FileUploadModal';
-import ConfirmModal from '@/components/ConfirmModal/ConfirmModal';
-import { ToolTipExplain } from '@/constants/description';
-import { FileMetadata } from '@/interfaces/storage';
+} from "@/apis/fileStorageApi";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
+import CreateFolderModal from "@/components/FileStorage/CreateFolderModal";
+import FileUploadModal from "@/components/FileStorage/FileUploadModal";
+import ConfirmModal from "@/components/ConfirmModal/ConfirmModal";
+import { ToolTipExplain } from "@/constants/description";
+import { FileMetadata } from "@/interfaces/storage";
 
 export default function Storage() {
   const [files, setFiles] = useState<FileMetadata[]>([]);
-  const [currentPath, setCurrentPath] = useState<string>('');
+  const [currentPath, setCurrentPath] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingCreateFolder, setIsLoadingCreateFolder] =
     useState<boolean>(false);
@@ -40,7 +40,7 @@ export default function Storage() {
     useState<boolean>(false);
   const [isLoadingDeleteFile, setIsLoadingDeleteFile] =
     useState<boolean>(false);
-  const [selectedFileToDelete, setSelectedFileToDelete] = useState<string>('');
+  const [selectedFileToDelete, setSelectedFileToDelete] = useState<string>("");
   const [selectedDates, setSelectedDates] = useState<Date[]>([
     new Date(),
     new Date(),
@@ -89,7 +89,7 @@ export default function Storage() {
     setIsLoading(true);
     getFiles(currentPath)
       .then((res) => {
-        setFiles(res.filter((file) => file.name !== ''));
+        setFiles(res.filter((file) => file.name !== ""));
       })
       .finally(() => {
         setIsLoading(false);
@@ -97,13 +97,13 @@ export default function Storage() {
   }, [currentPath]);
 
   const handleFileItemClick = (name: string) => {
-    if (name.endsWith('/')) {
+    if (name.endsWith("/")) {
       setCurrentPath(`${currentPath}${name}`);
     } else {
       setIsLoadingGetPresignedUrl(true);
       getPresignedUrl(`${currentPath}${name}`)
         .then((res) => {
-          window.open(res.url, '_blank');
+          window.open(res.url, "_blank");
         })
         .finally(() => {
           setIsLoadingGetPresignedUrl(false);
@@ -116,7 +116,7 @@ export default function Storage() {
     setIsLoading(true);
     getFiles(currentPath)
       .then((res) => {
-        setFiles(res.filter((file) => file.name !== ''));
+        setFiles(res.filter((file) => file.name !== ""));
       })
       .finally(() => {
         setIsLoading(false);
@@ -138,11 +138,11 @@ export default function Storage() {
 
   const handleConfirmDelete = async () => {
     setIsLoadingDeleteFile(true);
-    const isDirectory = selectedFileToDelete.endsWith('/');
+    const isDirectory = selectedFileToDelete.endsWith("/");
     if (isDirectory) {
       const files = await getFiles(selectedFileToDelete);
-      if (files.some((file) => file.name !== '')) {
-        alert('The folder is not empty');
+      if (files.some((file) => file.name !== "")) {
+        alert("The folder is not empty");
         setIsLoadingDeleteFile(false);
         return;
       }
@@ -153,7 +153,7 @@ export default function Storage() {
       onCloseConfirmDeleteModal();
       setIsLoading(true);
       const res = await getFiles(currentPath);
-      setFiles(res.filter((file) => file.name !== ''));
+      setFiles(res.filter((file) => file.name !== ""));
     } catch (error: any) {
       alert(error);
     }
@@ -172,35 +172,39 @@ export default function Storage() {
             hasArrow
             label={ToolTipExplain.STORAGE_SERVICE}
             bg="gray.300"
-            color="black">
+            color="black"
+          >
             <QuestionIcon color="blue.500" />
           </Tooltip>
         </div>
         <Breadcrumb
           separator={<ChevronRightIcon color="gray.500" />}
           spacing="8px"
-          className="px-[20px] ml-[35px] mt-[20px]">
+          className="px-[20px] ml-[35px] mt-[20px]"
+        >
           <BreadcrumbItem>
             <BreadcrumbLink
               color="#319795"
               onClick={() => {
-                setCurrentPath('');
-              }}>
+                setCurrentPath("");
+              }}
+            >
               /
             </BreadcrumbLink>
           </BreadcrumbItem>
-          {currentPath.split('/').map((path, index) => (
+          {currentPath.split("/").map((path, index) => (
             <BreadcrumbItem key={index}>
               <BreadcrumbLink
                 color="#319795"
                 onClick={() => {
                   setCurrentPath(
                     currentPath
-                      .split('/')
+                      .split("/")
                       .slice(0, index + 1)
-                      .join('/') + '/'
+                      .join("/") + "/"
                   );
-                }}>
+                }}
+              >
                 {path}
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -267,7 +271,7 @@ export default function Storage() {
           isOpen={isOpenConfirmDeleteModal}
           onClose={onCloseConfirmDeleteModal}
           title={`Delete ${
-            selectedFileToDelete.endsWith('/') ? 'folder' : 'file'
+            selectedFileToDelete.endsWith("/") ? "folder" : "file"
           }?`}
           content={`delete ${selectedFileToDelete}`}
           onConfirm={handleConfirmDelete}

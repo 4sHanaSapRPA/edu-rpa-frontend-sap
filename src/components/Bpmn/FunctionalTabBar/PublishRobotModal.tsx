@@ -1,4 +1,4 @@
-import { TriggerType } from '@/interfaces/robot';
+import { TriggerType } from "@/interfaces/robot";
 import {
   ModalContent,
   ModalHeader,
@@ -23,23 +23,23 @@ import {
   ModalOverlay,
   Container,
   Heading,
-} from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
-import { toastSuccess } from '@/utils/common';
-import { useRouter } from 'next/router';
-import robotApi from '@/apis/robotApi';
-import { BpmnParseError, BpmnParseErrorCode } from '@/utils/bpmn-parser/error';
-import { dryrun, handleCheckDryrunError } from '@/apis/robotCodeValidateApi';
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { toastSuccess } from "@/utils/common";
+import { useRouter } from "next/router";
+import robotApi from "@/apis/robotApi";
+import { BpmnParseError, BpmnParseErrorCode } from "@/utils/bpmn-parser/error";
+import { dryrun, handleCheckDryrunError } from "@/apis/robotCodeValidateApi";
 import {
   RobotCreationError,
   UserCredentialError,
   ValidationError,
-} from '@/apis/ErrorMessage';
-import RobotExecutionComponent from './DisplayError/DisplayValidationError';
-import connectionApi from '@/apis/connectionApi';
-import { AxiosError } from 'axios';
-import ConnectionTable from '@/components/Connection/ConnectionTable';
-import _ from 'lodash';
+} from "@/apis/ErrorMessage";
+import RobotExecutionComponent from "./DisplayError/DisplayValidationError";
+import connectionApi from "@/apis/connectionApi";
+import { AxiosError } from "axios";
+import ConnectionTable from "@/components/Connection/ConnectionTable";
+import _ from "lodash";
 
 interface Props {
   processID: string;
@@ -53,13 +53,13 @@ const delay = async (delay) => {
 };
 
 const steps = [
-  { description: 'Validate...' },
-  { description: 'Check Connection ...' },
-  { description: 'Publishing ...' },
+  { description: "Validate..." },
+  { description: "Check Connection ..." },
+  { description: "Publishing ..." },
 ];
 
 export const PublishRobotModal = (props: Props) => {
-  const [robotName, setRobotName] = useState('');
+  const [robotName, setRobotName] = useState("");
   const [triggerType, setTriggerType] = useState<TriggerType>(
     TriggerType.MANUAL
   );
@@ -73,8 +73,9 @@ export const PublishRobotModal = (props: Props) => {
     credentials: string[];
   }>(() => {
     const result = props.genRobotCode(props.processID);
+    console.log("Robot code generation result:", result);
     if (!result?.code || !result.credentials) {
-      throw new BpmnParseError(BpmnParseErrorCode['Unknown'], '');
+      throw new BpmnParseError(BpmnParseErrorCode["Unknown"], "");
     }
     return result;
   });
@@ -82,7 +83,7 @@ export const PublishRobotModal = (props: Props) => {
   const [activeStep, setActiveStep] = useState(0); // Initialize active step to 0
   const [loading, setLoading] = useState(false); // State to track loading status of API call
   const [publishClicked, setPublishClicked] = useState(false); // State to track whether publish button is clicked
-  const activeStepText = steps[activeStep]?.description ?? 'Done !!!';
+  const activeStepText = steps[activeStep]?.description ?? "Done !!!";
   const [error, setError] = useState(null); // State to track errors
 
   // Handler for publish button click
@@ -101,7 +102,7 @@ export const PublishRobotModal = (props: Props) => {
           const response = await dryrun(result?.code);
           const isErrorReponse = handleCheckDryrunError(response);
           if (isErrorReponse) {
-            throw new ValidationError('Validation Error', response);
+            throw new ValidationError("Validation Error", response);
           }
         case 1:
           let connections = await connectionApi.getConnectionsByConnectionKey(
@@ -127,7 +128,7 @@ export const PublishRobotModal = (props: Props) => {
 
           if (expiredConnections.length) {
             throw new UserCredentialError(
-              'Connection expired',
+              "Connection expired",
               expiredConnections
             );
           }
@@ -144,10 +145,10 @@ export const PublishRobotModal = (props: Props) => {
 
             await robotApi.createRobot(publishPayload);
 
-            toastSuccess(toast, 'Create robot successfully!');
+            toastSuccess(toast, "Create robot successfully!");
 
             // Redirect to robot page
-            router.push('/robot');
+            router.push("/robot");
           } catch (error) {
             throw new RobotCreationError(error.message, error.response);
           }
@@ -179,7 +180,8 @@ export const PublishRobotModal = (props: Props) => {
       const txt = JSON.stringify(error.errorResponse, null, 2);
       return (
         <RobotExecutionComponent
-          data={error.errorResponse}></RobotExecutionComponent>
+          data={error.errorResponse}
+        ></RobotExecutionComponent>
       );
     } else if (error instanceof RobotCreationError) {
       return (
@@ -194,22 +196,24 @@ export const PublishRobotModal = (props: Props) => {
             <strong>Error:</strong> {error.errorResponse.data.error}
           </p>
           <p>
-            <strong>Message:</strong>{' '}
-            {error.errorResponse.data.message.join(', ')}
+            <strong>Message:</strong>{" "}
+            {Array.isArray(error?.errorResponse?.data?.message)
+              ? error.errorResponse.data.message.join(", ")
+              : error?.errorResponse?.data?.message}
           </p>
         </Box>
       );
     } else if (error instanceof UserCredentialError) {
       const tableProps = {
         header: [
-          'Service',
-          'Connection name',
-          'Created at',
-          'Status',
-          'Action',
+          "Service",
+          "Connection name",
+          "Created at",
+          "Status",
+          "Action",
         ],
         data: _.map(error.expiredConnectionList, (conn) =>
-          _.omit(conn, ['connectionKey', 'refreshToken', 'accessToken'])
+          _.omit(conn, ["connectionKey", "refreshToken", "accessToken"])
         ),
       };
       return <ConnectionTable {...tableProps}></ConnectionTable>;
@@ -225,7 +229,10 @@ export const PublishRobotModal = (props: Props) => {
           <strong>Error:</strong> {error.response.data.error}
         </p>
         <p>
-          <strong>Message:</strong> {error.response.data ? "Unknown Error" : error.response.data.message.join(', ')}
+          <strong>Message:</strong>{" "}
+          {error.response.data
+            ? "Unknown Error"
+            : error.response.data.message.join(", ")}
         </p>
       </Box>;
     }
@@ -258,7 +265,8 @@ export const PublishRobotModal = (props: Props) => {
           <FormLabel>Trigger type</FormLabel>
           <Select
             value={triggerType}
-            onChange={(e) => setTriggerType(e.target.value as TriggerType)}>
+            onChange={(e) => setTriggerType(e.target.value as TriggerType)}
+          >
             <option value={TriggerType.MANUAL}>Manual</option>
             <option value={TriggerType.SCHEDULE}>Schedule</option>
             <option value={TriggerType.EVENT_GMAIL}>New emails (Gmail)</option>
@@ -275,9 +283,10 @@ export const PublishRobotModal = (props: Props) => {
           <Box position="relative">
             <Stepper
               size="sm"
-              colorScheme={error ? 'red' : 'green'}
+              colorScheme={error ? "red" : "green"}
               index={activeStep}
-              gap="0">
+              gap="0"
+            >
               {steps.map((step, index) => (
                 <Step key={index}>
                   <StepIndicator bg="white">
@@ -296,19 +305,21 @@ export const PublishRobotModal = (props: Props) => {
             </Stepper>
             {error ? (
               <div>
-                <b style={{ color: 'red', display: 'block' }}>
+                <b style={{ color: "red", display: "block" }}>
                   Error: {error.message}
                 </b>
                 <Button
                   size="sm"
-                  style={{ display: 'block' }}
-                  onClick={() => setIsOpenErrorDetail(true)}>
+                  style={{ display: "block" }}
+                  onClick={() => setIsOpenErrorDetail(true)}
+                >
                   Show Detail
                 </Button>
                 <Modal
                   isOpen={isOpenErrorDetail}
                   onClose={onClose}
-                  size={activeStep == 0 ? 'full' : 'xl'}>
+                  size={activeStep == 0 ? "full" : "xl"}
+                >
                   <ModalOverlay />
                   <ModalContent>
                     <ModalCloseButton />
@@ -323,7 +334,7 @@ export const PublishRobotModal = (props: Props) => {
                 </Modal>
               </div>
             ) : (
-              <div style={{ color: 'red' }}>
+              <div style={{ color: "red" }}>
                 Step {activeStep + 1}: <b>{activeStepText}</b>
               </div>
             )}
@@ -344,7 +355,8 @@ export const PublishRobotModal = (props: Props) => {
           mr={3}
           colorScheme="teal"
           variant="outline"
-          onClick={props.onClose}>
+          onClick={props.onClose}
+        >
           Cancel
         </Button>
         {!publishClicked ? (
